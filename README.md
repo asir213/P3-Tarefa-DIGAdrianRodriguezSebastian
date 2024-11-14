@@ -83,14 +83,55 @@ Neste caso o tempo no cache sera de 7 segundos
 
 # 8 Busca o TTL de distintos nomes de dominio de servicios que escollas, a qué se poden deber as diferencias?
 
+Primeiro TTL significa Time To Live que indica durante canto tempo unha resposta DNS pode ser almacenada en caché polos servidores antes de volverse obsoletea.
+
+dig google.com | grep TTL 
+típicamente 300 segundos 
+
+dig facebook.com | grep TTL
+típicamente 60 segundos
+
+dig twitter.com | grep TTL
+típicamente 60 segundos.
+
+Eu creo que é porque un TTL máis curto permite que os cambios DNS (por exemplo, cambios de IP) se propaguen máis rápido, pero tamén aumenta a carga nos servidores DNS xa que os rexistros deben ser solicitados con máis frecuencia. 
+
 # 9Determina o TTL máximo (original) dun nome de dominio.
+dig wikipedia.org +noall +answer +ttlid
+
+wikipedia.org.		198	IN	A	185.15.58.224
+
+Este é o valor actual do TTL (Time to Live) en segundos. Indica que quedan 198 segundos antes de que o rexistro se caduque na caché do servidor DNS resolutor
+
 
 # 10Averigua cántas máquinas con distintas IPs están detrás do dominio web www.google.es, sempre son as mesmas e na mesma orde? por qué?
 
+No meu caso, aparecíame que só a IP 142.250.184.3. Pero as IPs non son sempre as mismas e por tanto varian en cada consulta, polo sistema que usa Google de DNS.
+
 # 11Pregunta o mesmo a un server raiz (J.ROOTSERVERS.NET por exemplo) e comproba na resposta se o server acepta o modo recursivo
+
+Utilizamos o comando:
+
+dig @j.root-servers.net www.google.es
+
+;; flags: qr rd; QUERY: 1, ANSWER: 0, AUTHORITY: 13, ADDITIONAL: 26
+
 
 # 12 Se queremos ver tóda-las queries que fai o servidor de DNS, qué opción temos que usar? averigua a IP de www.timesonline.co.uk, especifica os pasos dados
 
+Para ver todas as respuestas do servidor, debemos poñer o comando de dig con un +trace, por exemplo nesta direccion quedaria tal que asi : dig +trace www.timesonline.co.uk
+
 # 13 Usando a información dispoñible a traveso do DNS especifica a máquina (nome e IP) ou máquinas que actúan como servers de correo do dominio danielcastelao.org
 
+Para descubrir estas maquinas debemos comezar polo comando : dig MX danielcastelao.org E como podemos observar na seccion de resposta, as maquinas que nos devolve esta consulta son as seguintes :
+danielcastelao.org. 900 IN MX 130 aspmx4.googlemail.com.
+danielcastelao.org. 900 IN MX 90 alt1.aspmx.l.google.com.
+danielcastelao.org. 900 IN MX 110 aspmx2.googlemail.com.
+danielcastelao.org. 900 IN MX 100 alt2.aspmx.l.google.com.
+danielcastelao.org. 900 IN MX 140 aspmx5.googlemail.com.
+danielcastelao.org. 900 IN MX 80 aspmx.l.google.com.
+danielcastelao.org. 900 IN MX 120 aspmx3.googlemail.com.
+
 # 14 Podes obter os rexistros AAAA de www.facebook.com? a qué corresponden?
+
+Os rexistros AAAA en DNS corresponden ás direccions IPv6 asociadas co dominio. Para obter ditos rexistros de facebook utilizaremos o seguinte comando : dig AAAA www.facebook.com
